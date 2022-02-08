@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
 const puppeteer = require('puppeteer');
-const func  = require('./puppeter');
+const func  = require('./services/puppeter');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const { urlencoded } = require('express');
-const captionFilter = require('./caption');
+const captionFilter = require('./services/caption');
 
 app.use(cors());
 app.use(express.json());

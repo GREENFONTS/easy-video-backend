@@ -7,7 +7,7 @@ let global_browser = false
 async function func(id){
     let captionUrl = ''
     if (global_browser == false){
-        global_browser = await puppeteer.launch({ headless: false })
+        global_browser = await puppeteer.launch({headless: false, args: ['--no-sandbox']})
     } 
     const page = await global_browser.newPage();
     await page.goto(`https://www.youtube.com/embed/${id}?autoplay=1`);
