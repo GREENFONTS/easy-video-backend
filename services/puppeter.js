@@ -8,6 +8,7 @@ async function func(id){
     if (global_browser == false){
         global_browser = await puppeteer.launch({args: [
             '--no-sandbox',
+            '--single-process'
           ]})
     }
 
@@ -27,8 +28,7 @@ async function func(id){
         
     })
     await listener;
-    await global_browser.close();
-    global_browser = false;
+    await page.close();
 }
 catch(err){
     console.log(err)
