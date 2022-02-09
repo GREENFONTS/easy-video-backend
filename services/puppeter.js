@@ -1,13 +1,14 @@
 const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
-const fs = require('fs');
-const captionFilter = require('./caption');
 
 let global_browser = false
 async function func(id){
     let captionUrl = ''
     if (global_browser == false){
-        global_browser = await puppeteer.launch({headless: false, args: ['--no-sandbox']})
+        global_browser = await puppeteer.launch({headless: false, args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+          ]})
     } 
     const page = await global_browser.newPage();
     await page.goto(`https://www.youtube.com/embed/${id}?autoplay=1`);
