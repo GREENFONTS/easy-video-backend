@@ -28,6 +28,7 @@ async function func(id){
     })
     await listener;
     await global_browser.close();
+    global_browser = false;
 }
 catch(err){
     console.log(err)
