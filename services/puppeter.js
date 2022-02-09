@@ -8,7 +8,8 @@ async function func(id){
         global_browser = await puppeteer.launch({args: [
             '--no-sandbox',
           ]})
-    } 
+    }
+
     const page = await global_browser.newPage();
     await page.goto(`https://www.youtube.com/embed/${id}?autoplay=1`);
 
@@ -25,7 +26,7 @@ async function func(id){
         
     })
     await listener;
-    await page.close();
+    await global_browser.close();
 
     try{
         const response = await fetch(captionUrl);
