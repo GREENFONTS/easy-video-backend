@@ -6,9 +6,10 @@ async function func(id){
     let captionUrl = ''
     try{
     if (global_browser == false){
-        global_browser = await puppeteer.launch({ headless: false, args: [
+        global_browser = await puppeteer.launch({ args: [
             '--no-sandbox',
-            '--single-process'
+            '--single-process',
+            '--enable-auto-reload'
           ]})
     }
 
@@ -28,6 +29,7 @@ async function func(id){
         
     })
     await listener;
+    
     await global_browser.close();
 }
 catch(err){
