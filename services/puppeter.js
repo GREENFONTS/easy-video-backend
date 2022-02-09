@@ -4,6 +4,7 @@ const fetch = require('node-fetch');
 let global_browser = false
 async function func(id){
     let captionUrl = ''
+    try{
     if (global_browser == false){
         global_browser = await puppeteer.launch({args: [
             '--no-sandbox',
@@ -27,6 +28,10 @@ async function func(id){
     })
     await listener;
     await global_browser.close();
+}
+catch(err){
+    console.log(err)
+}
 
     try{
         const response = await fetch(captionUrl);
