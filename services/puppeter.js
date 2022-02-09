@@ -6,7 +6,7 @@ async function func(id){
     let captionUrl = ''
     try{
     if (global_browser == false){
-        global_browser = await puppeteer.launch({args: [
+        global_browser = await puppeteer.launch({ headless: false, args: [
             '--no-sandbox',
             '--single-process'
           ]})
@@ -28,7 +28,7 @@ async function func(id){
         
     })
     await listener;
-    await page.close();
+    await global_browser.close();
 }
 catch(err){
     console.log(err)
