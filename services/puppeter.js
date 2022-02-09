@@ -5,9 +5,8 @@ let global_browser = false
 async function func(id){
     let captionUrl = ''
     if (global_browser == false){
-        global_browser = await puppeteer.launch({headless: false, args: [
+        global_browser = await puppeteer.launch({args: [
             '--no-sandbox',
-            '--disable-setuid-sandbox'
           ]})
     } 
     const page = await global_browser.newPage();
