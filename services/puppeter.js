@@ -1,18 +1,15 @@
 const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
 
-let global_browser = false
 async function func(id){
     let captionUrl = ''
     try{
-    if (global_browser == false){
-        global_browser = await puppeteer.launch({ args: [
+    
+     const global_browser = await puppeteer.launch({ args: [
             '--no-sandbox',
             '--single-process',
-            '--enable-auto-reload'
           ]})
-    }
-
+    
     const page = await global_browser.newPage();
     await page.goto(`https://www.youtube.com/embed/${id}?autoplay=1`);
 
