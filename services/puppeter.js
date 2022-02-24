@@ -3,14 +3,13 @@ const fetch = require('node-fetch');
 
 async function func(id){
     let captionUrl = ''
+    let global_browser = undefined;
     try{
-    
-     const global_browser = await puppeteer.launch({ args: [
-            '--no-sandbox',
-            '--single-process',
-          ]})
-    
+    if(global_browser == undefined){
+    global_browser = await puppeteer.launch({headless: false})
+    }
     const page = await global_browser.newPage();
+    await page.setDefaultNavigationTimeOut(0)
     await page.goto(`https://www.youtube.com/embed/${id}?autoplay=1`);
 
     await page.click('.ytp-subtitles-button')
@@ -20,14 +19,13 @@ async function func(id){
             if (response.url().startsWith('https://www.youtube.com/api/timedtext')) {
                 captionUrl = response.url()
                 res()
-            }
-    
+            }    
         })
         
     })
     await listener;
     
-    await global_browser.close();
+     await page.close();
 }
 catch(err){
     console.log(err)

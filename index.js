@@ -1,10 +1,9 @@
 const express = require('express');
 const app = express();
-const func  = require('./services/puppeter');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { urlencoded } = require('express');
 const captionFilter = require('./services/caption');
+const getVideoCaptions = require('./services/queues/video.queue')
 
 app.use(cors());
 app.use(express.json());
@@ -17,13 +16,15 @@ let result;
 app.get('/video/:id', async (req, res) => {
   id = req.params.id
   try{
-    result = await func(id)
-    res.status(200).send(result)
+    await getVideoCaptions(id);
+    res.status(200).send({msg: 'ok'})
   }
   catch(err){
     console.log(err)
   }
 })
+
+
 app.get('/:id', async (req, res) => {
   let word = req.params.id
 
@@ -38,7 +39,12 @@ app.get('/:id', async (req, res) => {
   
 })
 
+// workQueue.on('global:completed', (jobId, result) => {
+//   console.log(`Job completed with result ${result}`);
+// });
+
 const PORT = process.env.PORT || 4000
+
 
 app.listen(PORT, () => {
     console.log(`Connected to port ${PORT}`)
