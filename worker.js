@@ -1,20 +1,26 @@
-const Bull = require('bull');
-const {REDIS_URL} = require('./services/config/index');
-const videoProcess = require('./services/processes/video.process');
+const throng = require('throng');
+const Queue = require("bull");
+const func = require('./services/puppeter')
 
-const videoQueue = new Bull('video', {
-    redis: REDIS_URL
-});
+let REDIS_URL = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 
-videoQueue.process(videoProcess)
+let workers = process.env.WEB_CONCURRENCY || 2;
 
-videoQueue.on('completed', async (jobId, result) => {
-    let response = await jobId.toJSON()
-    console.log('Job completed', response.id)
-})
+let maxJobsPerWorker = 50;
 
-const getVideoCaptions = (url) => {    
-    videoQueue.add({url: url})
+
+function start() {
+  let workQueue = new Queue('work', REDIS_URL);
+  workQueue.process(maxJobsPerWorker, async (job) => {
+    
+    try{
+      let result = await func(job.data.url)
+      return result
+    }
+    catch(err){
+       throw err
+    }
+  });
 }
 
-module.exports = getVideoCaptions;
+throng({ workers, start });
