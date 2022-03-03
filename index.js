@@ -10,17 +10,22 @@ let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
 let app = express();
 
-app.use(cors({ credentials: true }))
-app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+  origin: ['https://localhost:3001/', 'http://localhost:3000/'],
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
 
-// Create / Connect to a named work queue
+
+// Create / Connect to a named work queue+*
 let workQueue = new Queue('work', {
   redis: REDIS_URL
 });
 
-
+app.get('/', (req, res) => {
+  res.json({url: REDIS_URL, msg: 'working'})
+})
 // Kick off a new job by adding it to the work queue
 app.get('/video/:id', async (req, res) => {
  
