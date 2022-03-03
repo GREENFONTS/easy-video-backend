@@ -2,8 +2,6 @@ let express = require('express');
 let Queue = require('bull');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-// const { accepts } = require('express/lib/request');
-const logger = require('heroku-logger')
 
 // Serve on PORT on Heroku and on localhost:5000 locally
 let PORT = process.env.PORT || '5000';
@@ -25,7 +23,7 @@ let error;
 
 
 // Create / Connect to a named work queue+*
-let workQueue = new Queue('work', 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540',
+let workQueue = new Queue('work', REDIS_URL,
  { redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  }
 });
 
@@ -68,8 +66,7 @@ app.get('/job/checkJob/:url', async (req,res) => {
       res.send(checkedJob)
     }
   }
-  
-  res.json({msg: 'working', data:checkedJob})
+
   })
 
 
