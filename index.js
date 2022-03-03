@@ -12,14 +12,13 @@ let app = express();
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors())
-let error;
-// app.use((req, res, next) => {
-//   res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
-//   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//   res.append('Access-Control-Allow-Headers', 'Content-Type');
-//   next();
-// });
+
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 
 // Create / Connect to a named work queue+*
