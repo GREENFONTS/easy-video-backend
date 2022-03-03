@@ -24,7 +24,8 @@ app.use(cors())
 
 // Create / Connect to a named work queue+*
 let workQueue = new Queue('work', {
-  redis: 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32539'
+  redis: 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32539',
+  tls: {},
 });
 
 app.get('/', (req, res) => {
@@ -76,7 +77,7 @@ app.get('/job/:jobId', async (req, res) => {
 
   let id = req.params.jobId;
   let job = await workQueue.getJob(id);
-  console.log(job)
+  
   if (job === null) {
     res.json({state: 'id not found'});
   } else {
