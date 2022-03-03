@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 async function func(id){
     let captionUrl = ''
     try{
-    let global_browser = await puppeteer.launch({headless: false})
+    let global_browser = await puppeteer.launch({headless: false, args: ['--no-sandbox']})
     
     const page = await global_browser.newPage();
     

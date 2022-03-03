@@ -75,7 +75,7 @@ app.get('/job/:jobId', async (req, res) => {
 
   let id = req.params.jobId;
   let job = await workQueue.getJob(id);
-  try{
+  
     if (job === null) {
       res.json({state: 'id not found'});
     } else {
@@ -83,21 +83,12 @@ app.get('/job/:jobId', async (req, res) => {
       let progress = job._progress;
       let reason = job.failedReason;
       let datas = job.returnvalue
+      let url = job.data.url
      
-    res.json({ id, state, progress, reason, datas });
+    res.json({ id, url, state, progress, reason, datas });
   }
-}catch(e){
-  console.log("....................................................................ssssssssssssssssssssss")
- error = e
-  }
- 
-    
+console.log(job.returnvalue)
   
 });
-
-// logger.info('Starting server', { port: PORT })
-// logger.error('Invalid `type` argument', { argument: 'type', value: JSON.stringify(error) })
-
-
 
 app.listen(PORT, () => console.log(`Server started! at port ${PORT}`));
