@@ -2,7 +2,8 @@ let express = require('express');
 let Queue = require('bull');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { accepts } = require('express/lib/request');
+// const { accepts } = require('express/lib/request');
+const logger = require('heroku-logger')
 
 // Serve on PORT on Heroku and on localhost:5000 locally
 let PORT = process.env.PORT || '5000';
@@ -14,6 +15,7 @@ let app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors())
+let error;
 // app.use((req, res, next) => {
 //   res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
 //   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -90,11 +92,16 @@ app.get('/job/:jobId', async (req, res) => {
   }
 }catch(e){
   console.log("....................................................................ssssssssssssssssssssss")
-  console.log(e)
+ error = e
   }
  
     
   
 });
+
+logger.info('Starting server', { port: PORT })
+logger.error('Invalid `type` argument', { argument: 'type', value: JSON.stringify(error) })
+
+
 
 app.listen(PORT, () => console.log(`Server started! at port ${PORT}`));
