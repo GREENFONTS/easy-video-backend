@@ -51,21 +51,22 @@ app.get('/job/checkJob/:url', async (req,res) => {
   })
 }
 
-  
-  let checkedJobs = jobList.filter((job) => job.url == url)
-  if(checkedJobs.length > 0){
-    checkedJobs.forEach(job => ids.push(job.id))
-    checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
-    if(checkedJob.length != 0){
-      let job = await workQueue.getJob(checkedJob[0].id)
-    checkedJob[0].state = await job.getState()  
-    res.send(checkedJob[0])
-    }
-    else {
-      res.send(checkedJob)
-    }
+   let checkedJobs = jobList.filter((job) => job.url == url)
+   if(checkedJobs.length > 0){
+     checkedJobs.forEach(job => ids.push(job.id))
+     checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
+     if(checkedJob.length != 0){
+       let job = await workQueue.getJob(checkedJob[0].id)
+     checkedJob[0].state = await job.getState()  
+     res.status(200).json({data: checkedJob[0]})
+     }
+     else {
+       res.status(200).json({data: checkedJob})
+     }
   }
-
+  else {
+    res.status(200).json({data: checkedJobs})
+  }
   })
 
 
