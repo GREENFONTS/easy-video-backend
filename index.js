@@ -2,6 +2,7 @@ let express = require('express');
 let Queue = require('bull');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const { accepts } = require('express/lib/request');
 
 // Serve on PORT on Heroku and on localhost:5000 locally
 let PORT = process.env.PORT || '5000';
@@ -23,11 +24,11 @@ app.use(cors())
 
 // Create / Connect to a named work queue+*
 let workQueue = new Queue('work', {
-  redis: REDIS_URL
+  redis: 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32539'
 });
 
 app.get('/', (req, res) => {
-  res.json({url: REDIS_URL, msg: 'working'})
+  res.json({url: REDIS_URL, msg: 'working', queue: workQueue.name})
 })
 // Kick off a new job by adding it to the work queue
 app.get('/video/:id', async (req, res) => {
@@ -75,9 +76,9 @@ app.get('/job/:jobId', async (req, res) => {
 
   let id = req.params.jobId;
   let job = await workQueue.getJob(id);
-  
+  console.log(job)
   if (job === null) {
-    res.status(404).end();
+    res.json({state: 'id not found'});
   } else {
     let state = await job.getState();
     let progress = job._progress;
