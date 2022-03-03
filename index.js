@@ -12,13 +12,13 @@ let app = express();
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use(cors())
+// app.use((req, res, next) => {
+//   res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
+//   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   res.append('Access-Control-Allow-Headers', 'Content-Type');
+//   next();
+// });
 
 
 // Create / Connect to a named work queue+*
@@ -44,16 +44,18 @@ app.get('/job/checkJob/:url', async (req,res) => {
   let jobs = await workQueue.getJobs();
   let jobList = []
   let ids = []
+  let checkedJob;
   if(jobs.length > 0){
   jobs.forEach((ele) => {
     jobList.push({url: ele.data.url, id: ele.id})
   })
 }
+
   
   let checkedJobs = jobList.filter((job) => job.url == url)
   if(checkedJobs.length > 0){
     checkedJobs.forEach(job => ids.push(job.id))
-    let checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
+    checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
     if(checkedJob.length != 0){
       let job = await workQueue.getJob(checkedJob[0].id)
     checkedJob[0].state = await job.getState()  
@@ -64,9 +66,7 @@ app.get('/job/checkJob/:url', async (req,res) => {
     }
   }
   
-  
-  
-  
+  res.json({msg: 'working', data:checkedJob})
   })
 
 
