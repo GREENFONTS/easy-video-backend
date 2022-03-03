@@ -10,7 +10,7 @@ let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
 let app = express();
 
-app.options('*', cors())
+app.use(cors())
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
@@ -36,22 +36,29 @@ app.get('/job/checkJob/:url', async (req,res) => {
   let jobs = await workQueue.getJobs();
   let jobList = []
   let ids = []
+  if(jobs.length > 0){
   jobs.forEach((ele) => {
     jobList.push({url: ele.data.url, id: ele.id})
   })
+}
   
   let checkedJobs = jobList.filter((job) => job.url == url)
-  checkedJobs.forEach(job => ids.push(job.id))
-  let checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
+  if(checkedJobs.length > 0){
+    checkedJobs.forEach(job => ids.push(job.id))
+    let checkedJob = checkedJobs.filter(job => job.id == Math.max(...ids))
+    if(checkedJob.length != 0){
+      let job = await workQueue.getJob(checkedJob[0].id)
+    checkedJob[0].state = await job.getState()  
+    res.send(checkedJob[0])
+    }
+    else {
+      res.send(checkedJob)
+    }
+  }
   
-  if(checkedJob.length != 0){
-    let job = await workQueue.getJob(checkedJob[0].id)
-  checkedJob[0].state = await job.getState()  
-  res.send(checkedJob[0])
-  }
-  else {
-    res.send(checkedJob)
-  }
+  
+  
+  
   })
 
 
