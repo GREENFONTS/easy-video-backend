@@ -23,7 +23,7 @@ app.use(cors())
 
 // Create / Connect to a named work queue+*
 let workQueue = new Queue('work', {
-  redis: 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540'
+  redis: REDIS_URL
 });
 
 app.get('/', (req, res) => {
