@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['http://localhost:3000']);
+  res.append('Access-Control-Allow-Origin', ['http://localhost:3000', 'https://localhost:3001']);
   res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   next();
@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 
 // Create / Connect to a named work queue+*
 let workQueue = new Queue('work', {
-  redis: REDIS_URL
+  redis: 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540'
 });
 
 app.get('/', (req, res) => {
