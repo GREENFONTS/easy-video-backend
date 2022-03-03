@@ -77,18 +77,24 @@ app.get('/job/:jobId', async (req, res) => {
 
   let id = req.params.jobId;
   let job = await workQueue.getJob(id);
-  
-  if (job === null) {
-    res.json({state: 'id not found'});
-  } else {
-    let state = await job.getState();
-    let progress = job._progress;
-    let reason = job.failedReason;
-    let datas = job.returnvalue
-   
-  res.json({ id, state, progress, reason, datas });
-    
+  try{
+    if (job === null) {
+      res.json({state: 'id not found'});
+    } else {
+      let state = await job.getState();
+      let progress = job._progress;
+      let reason = job.failedReason;
+      let datas = job.returnvalue
+     
+    res.json({ id, state, progress, reason, datas });
   }
+}catch(e){
+  console.log("....................................................................ssssssssssssssssssssss")
+  console.log(e)
+  }
+ 
+    
+  
 });
 
 app.listen(PORT, () => console.log(`Server started! at port ${PORT}`));
