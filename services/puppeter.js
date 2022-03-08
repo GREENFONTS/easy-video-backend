@@ -19,7 +19,6 @@ async function func(id){
 
             if (response.url().startsWith('https://www.youtube.com/api/timedtext')) {
                 captionUrl = response.url()
-                console.log(captionUrl)
                 res()
         }  
         })

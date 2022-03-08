@@ -17,7 +17,6 @@ function start() {
     
     try{      
       let result = await func(job.data.url)
-      console.log(result)
       return result
     }
     catch(err){
