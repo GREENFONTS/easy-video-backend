@@ -2,10 +2,9 @@ const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
 
 async function func(id){
-    let global_browser = null
     let captionUrl = ''
-    try{
-    global_browser = await puppeteer.launch({ args: ['--no-sandbox']})
+try{
+   let global_browser = await puppeteer.launch({ args: ['--no-sandbox']})
     
     const page = await global_browser.newPage();
     
@@ -25,7 +24,7 @@ async function func(id){
         
     })
     await listener;
-    await page.close();
+    await global_browser.close();
 }
 catch(err){
     console.log(err)
