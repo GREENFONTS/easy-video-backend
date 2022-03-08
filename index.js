@@ -19,11 +19,16 @@ app.use((req, res, next) => {
   res.append('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
-
-
+// for production
+// redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540
+// { redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  }
+//for development testing
+// {
+//   redis: 'redis://127.0.0.1:6379'
+// }  
 // Create / Connect to a named work queue+*
 let workQueue = new Queue('work', 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540',
- { redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  }
+{ redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  } 
 });
 
 app.get('/', (req, res) => {
@@ -47,10 +52,9 @@ app.get('/job/checkJob/:url', async (req,res) => {
   let checkedJob;
   if(jobs.length > 0){
   jobs.forEach((ele) => {
-    jobList.push({url: ele.data.url, id: ele.id})
+    jobList.push({url: ele.data.url, id: ele.id, datas: ele.returnvalue})
   })
 }
-
    let checkedJobs = jobList.filter((job) => job.url == url)
    if(checkedJobs.length > 0){
      checkedJobs.forEach(job => ids.push(job.id))
@@ -74,9 +78,8 @@ app.get('/job/checkJob/:url', async (req,res) => {
 app.get('/job/:jobId', async (req, res) => {
 
   let id = req.params.jobId;
-  let job = await workQueue.getJob(id);
-  
-    if (job === null) {
+   let job = await workQueue.getJob(id);
+     if (job === null) {
       res.json({state: 'id not found'});
     } else {
       let state = await job.getState();
@@ -87,8 +90,7 @@ app.get('/job/:jobId', async (req, res) => {
      
     res.json({ id, url, state, progress, reason, datas });
   }
-console.log(job.returnvalue)
-  
+
 });
 
 app.listen(PORT, () => console.log(`Server started! at port ${PORT}`));

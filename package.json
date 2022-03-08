@@ -14,7 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "node-fetch": "^2.6.7",
-    "puppeteer": "^13.1.2",
+    "puppeteer": "^13.4.1",
     "puppeteer-devtools": "^2.0.1",
     "throng": "^5.0.0"
   },
