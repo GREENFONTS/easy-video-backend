@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-let workQueue = new Queue('work', REDIS_URL,
+let workQueue = new Queue('work', 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-52-1-17-211.compute-1.amazonaws.com:7700',
 { redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  } 
 });
 
