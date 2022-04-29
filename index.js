@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 // Serve on PORT on Heroku and on localhost:5000 locally
 let PORT = process.env.PORT || '5000';
 // Connect to a local redis intance locally, and the Heroku-provided URL in production
-let REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+let REDIS_URL = process.env.REDIS_TLS_URL || 'redis://127.0.0.1:6379';
 
 let app = express();
 
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 //   redis: 'redis://127.0.0.1:6379'
 // }  
 // Create / Connect to a named work queue+*
-let workQueue = new Queue('work', 'redis://:p50ad4f338c54668a454a16b525cbb111631f1251bae387b41b2093cfa368539d@ec2-34-202-94-249.compute-1.amazonaws.com:32540',
+let workQueue = new Queue('work', REDIS_URL,
 { redis: { tls: { rejectUnauthorized: false, requestCert: true,  }, maxRetriesPerRequest : 20,  } 
 });
 
